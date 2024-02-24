@@ -23,12 +23,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
+    _speechEnabled = await _speechToText.initialize(
+        // finalTimeout:  Duration(minutes: )
+        );
     setState(() {});
   }
 
   void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
+    await _speechToText.listen(
+        onResult: _onSpeechResult,
+        listenFor: const Duration(minutes: 5),
+        pauseFor: const Duration(seconds: 60));
     setState(() {
       _confidenceLevel = 0;
     });
@@ -47,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   /// the platform returns recognized words.
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-      _wordsSpoken = "${result.recognizedWords}";
+      _wordsSpoken = result.recognizedWords;
       _confidenceLevel = result.confidence;
     });
   }
